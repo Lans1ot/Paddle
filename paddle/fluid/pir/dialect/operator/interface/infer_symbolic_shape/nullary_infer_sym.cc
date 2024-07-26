@@ -260,6 +260,19 @@ bool FullOpInferSymbolicShape(pir::Operation *op,
   return true;
 }
 
+bool FullLikeOpInferSymbolicShape(
+    pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {
+  const symbol::ShapeOrDataDimExprs &x_shape_or_data =
+      infer_context->GetShapeOrDataForValue(op->operand_source(0));
+
+  infer_context->SetShapeOrDataForValue(
+      op->result(0),
+      symbol::ShapeOrDataDimExprs{
+          symbol::TensorShapeOrDataDimExprs(x_shape_or_data.shape())});
+
+  return true;
+}
+
 bool FullIntArrayOpInferSymbolicShape(
     pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {
   const auto &attributes = op->attributes();
