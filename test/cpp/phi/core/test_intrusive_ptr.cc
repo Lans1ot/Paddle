@@ -40,12 +40,18 @@ TEST(intrusive_ref_counter, async) {
   for (auto& result : results) {
     result.get();
   }
-  CHECK_EQ(obj.use_count(), 1u);
+  PADDLE_ENFORCE_EQ(
+      obj.use_count(),
+      1u,
+      phi::errors::Fatal("Input object's using count is %u, not 1",
+                         obj.use_count()));
 }
 
 TEST(intrusive_ptr, default_ctor) {
   intrusive_ptr<SharedObject> p;
   CHECK(p == nullptr);
+  // PADDLE_ENFORCE_EQ(p, nullptr, phi::errors::Fatal("Input pointer is not a
+  // nullptr"));
 }
 
 TEST(intrusive_ptr, private_ctor) {
@@ -54,7 +60,11 @@ TEST(intrusive_ptr, private_ctor) {
   auto p1 = std::move(p);
   intrusive_ptr<intrusive_ref_counter<SharedObject>> p2(std::move(p1));
   const auto* ptr1 = p2.get();
-  CHECK_EQ(ptr0, ptr1);
+  PADDLE_ENFORCE_EQ(
+      ptr0,
+      ptr1,
+      phi::errors::Fatal(
+          "p1 is not equal to p2, something wrong with move function"));
 }
 
 TEST(intrusive_ptr, reset_with_obj) {
@@ -62,7 +72,11 @@ TEST(intrusive_ptr, reset_with_obj) {
   obj.i = 1;
   intrusive_ptr<SharedObject> p;
   p.reset(&obj, true);
-  CHECK_EQ(p->i, obj.i);
+  PADDLE_ENFORCE_EQ(
+      p->i,
+      obj.i,
+      phi::errors::Fatal("p->i is not equal to obj.j, something wrong with "
+                         "intrusive_ptr<T>.reset function or operator->"));
 }
 
 TEST(intrusive_ptr, reset_with_ptr) {
@@ -70,9 +84,15 @@ TEST(intrusive_ptr, reset_with_ptr) {
   ptr->i = 1;
   intrusive_ptr<SharedObject> p;
   p.reset(ptr, false);
-  CHECK_EQ((*p).i, ptr->i);
+  PADDLE_ENFORCE_EQ(
+      (*p).i,
+      ptr->i,
+      phi::errors::Fatal("(*p).i is not equal to ptr->i, something wrong with "
+                         "intrusive_ptr<T>.reset function or operator*"));
   p.reset();
   CHECK(p == nullptr);
+  // PADDLE_ENFORCE_EQ(p, nullptr, phi:errors::Fatal("p is not a nullptr,
+  // something wrong with intrusive_ptr<T>.reset"));
 }
 
 TEST(intrusive_ptr, op_comp) {
@@ -81,15 +101,39 @@ TEST(intrusive_ptr, op_comp) {
   auto null = intrusive_ptr<SharedObject>();
   auto p1 = make_intrusive<SharedObject>();
   CHECK(p == copy);
+  // PADDLE_ENFORCE_EQ(p, copy, phi::errors::Fatal("intrusive_ptr p is not euqal
+  // to its copy, something wrong with copy constructor "));
   CHECK(p != p1);
+  // PADDLE_ENFORCE_NE(p, p1, phi::errors::Fatal("intrusive_ptr p is equal to
+  // another pointer, something wrong with constructor"));
   CHECK(p == copy.get());
+  // PADDLE_ENFORCE_EQ(p, copy.get(), phi::errors::Fatal("blank intrusive_ptr
+  // p's content is not equal to its copy, something wrong with constructor or
+  // get funtion"));
   CHECK(p != p1.get());
+  // PADDLE_ENFORCE_NE(p, p1.get(), phi::errors::Fatal("intrusive_ptr p's
+  // content is equal to another blank pointer, something wrong with constructor
+  // or get function"));
   CHECK(p.get() == copy);
+  // PADDLE_ENFORCE_EQ(p.get(), copy, phi::errors::Fatal("blank intrusive_ptr
+  // p's content is not equal to its copy, something wrong with constructor or
+  // get funtion"));
   CHECK(p.get() != p1);
+  // PADDLE_ENFORCE_NE(p.get(), p1, phi::errors::Fatal("intrusive_ptr p's
+  // content is equal to another blank pointer, something wrong with constructor
+  // or get function"));
   CHECK(null == nullptr);
+  // PADDLE_ENFORCE_EQ(null, nullptr, phi::errors::Fatal("variable or constant
+  // whose name is null is not a nullptr, something wrong with operator=="));
   CHECK(nullptr == null);
+  // PADDLE_ENFORCE_EQ(nullptr, null, phi::errors::Fatal("variable or constant
+  // whose name is null is not a nullptr, something wrong with operator=="));
   CHECK(p != nullptr);
+  // PADDLE_ENFORCE_NE(p, nullptr, phi::errors::Fatal("intrusive_ptr p is not
+  // not_equal to null, something wrong with constructor or operator!= "));
   CHECK(nullptr != p);
+  // PADDLE_ENFORCE_NE(nullptr, p, phi::errors::Fatal("intrusive_ptr p is not
+  // not_equal to null, something wrong with constructor or operator!= "));
 }
 
 }  // namespace tests
