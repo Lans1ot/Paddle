@@ -134,7 +134,6 @@ TEST(sparse_csr_tensor, other_function) {
 
   // Test shallow_copy_assignment
   SparseCsrTensor csr3 = csr2;
-  CHECK(csr3.dims() == csr2.dims());
   PADDLE_ENFORCE_EQ(
       csr3.dims(),
       csr2.dims(),
