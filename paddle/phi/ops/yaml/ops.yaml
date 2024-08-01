@@ -406,7 +406,6 @@
   kernel :
     func : atan2
   backward : atan2_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : atanh
   args : (Tensor x)
@@ -562,7 +561,6 @@
   kernel:
     func: bipartite_match
     data_type: dist_mat
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : bitwise_and
   args : (Tensor x, Tensor y)
@@ -1271,7 +1269,6 @@
   kernel:
     func: dequantize_log
     data_type: x
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : det
   args : (Tensor x)
@@ -1465,7 +1462,6 @@
   kernel :
     func : eigh
   backward : eigh_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : eigvals
   args : (Tensor x)
@@ -1484,7 +1480,6 @@
     func : eigvalsh
     data_type : x
   backward : eigvalsh_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : elu
   args : (Tensor x, float alpha = 1.0f)
@@ -2032,7 +2027,6 @@
   data_transform :
     skip_transform : x
   traits : paddle::dialect::ForwardOnlyTrait
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : full_with_tensor
   args : (Tensor value, IntArray shape, DataType dtype=DataType::FLOAT32)
@@ -2366,7 +2360,6 @@
     func : i0
   inplace: (x -> out)
   backward : i0_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : i0e
   args : (Tensor x)
@@ -2376,7 +2369,6 @@
   kernel :
     func : i0e
   backward : i0e_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : i1
   args : (Tensor x)
@@ -2386,7 +2378,6 @@
   kernel :
     func : i1
   backward : i1_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : i1e
   args : (Tensor x)
@@ -2396,7 +2387,6 @@
   kernel :
     func : i1e
   backward : i1e_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : identity_loss
   args : (Tensor x, int reduction = 1)
@@ -2646,7 +2636,6 @@
   backward : layer_norm_grad
   intermediate : mean, variance
   optional : scale, bias
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : leaky_relu
   args : (Tensor x, float negative_slope = 0.02f)
@@ -2869,7 +2858,6 @@
   kernel :
     func : logsigmoid
   backward : logsigmoid_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : logspace
   args : (Tensor start, Tensor stop, Tensor num, Tensor base, DataType dtype, Place place={})
@@ -2913,7 +2901,6 @@
     func : lp_pool2d
     param : [x, kernel_size, strides, paddings, ceil_mode, exclusive, data_format, pooling_type, global_pooling, adaptive, padding_algorithm, norm_type]
   backward : lp_pool2d_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : lstm
   args: (Tensor input, Tensor h0, Tensor c0, Tensor weight, Tensor bias, bool use_peepholes
@@ -3073,7 +3060,6 @@
   kernel :
     func : maxout
   backward : maxout_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : mean
   args : (Tensor x, IntArray axis={}, bool keepdim=false)
@@ -3093,7 +3079,6 @@
   kernel :
     func : mean_all
   backward : mean_all_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : memcpy_d2h
   args : (Tensor x, int dst_place_type)
@@ -3357,7 +3342,6 @@
   data_transform:
     skip_transform : x
   no_need_buffer : x
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : one_hot
   args : (Tensor x, Scalar(int) num_classes)
@@ -3486,7 +3470,7 @@
     func : pool2d
     param : [x, kernel_size, strides, paddings, ceil_mode, exclusive, data_format, pooling_type, global_pooling, adaptive, padding_algorithm]
   backward : pool2d_grad
-  interfaces : paddle::dialect::LayoutTransformationInterface, paddle::dialect::InferSymbolicShapeInterface
+  interfaces : paddle::dialect::LayoutTransformationInterface
 
 - op : pool3d
   args : (Tensor x, int[] kernel_size, int[] strides, int[] paddings, bool ceil_mode, bool exclusive, str data_format, str pooling_type, bool global_pooling, bool adaptive, str padding_algorithm)
@@ -3522,7 +3506,6 @@
     func : prelu
     data_type : x
   backward : prelu_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : prior_box
   args : (Tensor input, Tensor image, float[] min_sizes, float[] max_sizes = {}, float[] aspect_ratios = {}, float[] variances = {}, bool flip=true, bool clip=true, float step_w=0.0, float step_h=0.0, float offset=0.5, bool min_max_aspect_ratios_order=false)
@@ -4426,7 +4409,7 @@
   kernel :
     func : swish
   backward : swish_grad
-  interfaces : paddle::dialect::InferSymbolicShapeInterface, paddle::dialect::LayoutTransformationInterface
+  interfaces : paddle::dialect::LayoutTransformationInterface
 
 - op : sync_batch_norm_
   args : (Tensor x, Tensor mean, Tensor variance, Tensor scale, Tensor bias, bool is_test, float momentum, float epsilon, str data_format, bool use_global_stats, bool trainable_statistics)
@@ -4834,7 +4817,6 @@
     func : view_shape
   backward : view_shape_grad
   no_need_buffer : input
-  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : viterbi_decode
   args : (Tensor potentials, Tensor transition_params, Tensor lengths, bool include_bos_eos_tag = true)
@@ -4967,6 +4949,7 @@
   args : (Tensor x, DataType dtype=DataType::UNDEFINED, Place place = {})
   output : Tensor(out)
   invoke : full_like(x, 0, dtype, place)
+  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op: chunk_eval
   args: (Tensor inference, Tensor label, Tensor seq_length, int num_chunk_types, str
