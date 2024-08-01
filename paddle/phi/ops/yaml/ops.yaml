@@ -4962,6 +4962,7 @@
   args : (IntArray shape, DataType dtype=DataType::FLOAT32, Place place=CPUPlace())
   output : Tensor(out)
   invoke : full(shape, 0, dtype, place)
+  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : zeros_like
   args : (Tensor x, DataType dtype=DataType::UNDEFINED, Place place = {})
