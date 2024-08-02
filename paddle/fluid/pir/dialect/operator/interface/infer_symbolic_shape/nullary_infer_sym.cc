@@ -415,4 +415,9 @@ bool UniformOpInferSymbolicShape(
   return GaussianOpInferSymbolicShape(op, infer_context);
 }
 
+bool ZerosOpInferSymbolicShape(pir::Operation *op,
+                               pir::InferSymbolicShapeContext *infer_context) {
+  return FullOpInferSymbolicShape(op, infer_context);
+}
+
 }  // namespace paddle::dialect

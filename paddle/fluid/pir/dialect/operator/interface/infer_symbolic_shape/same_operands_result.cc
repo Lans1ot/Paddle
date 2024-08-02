@@ -163,6 +163,7 @@ OP_SAME_OPERANDS_AND_RESULT(Polygamma)
 OP_SAME_OPERANDS_AND_RESULT(Polygamma_)
 OP_SAME_OPERANDS_AND_RESULT(EnableCheckModelNanInf)
 OP_SAME_OPERANDS_AND_RESULT(ViewShape)
+OP_SAME_OPERANDS_AND_RESULT(ZerosLike)
 
 bool ScaleOpInferSymbolicShape(pir::Operation *op,
                                pir::InferSymbolicShapeContext *infer_context) {

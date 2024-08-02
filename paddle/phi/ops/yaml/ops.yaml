@@ -4985,11 +4985,13 @@
   args : (IntArray shape, DataType dtype=DataType::FLOAT32, Place place=CPUPlace())
   output : Tensor(out)
   invoke : full(shape, 0, dtype, place)
+  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : zeros_like
   args : (Tensor x, DataType dtype=DataType::UNDEFINED, Place place = {})
   output : Tensor(out)
   invoke : full_like(x, 0, dtype, place)
+  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op: chunk_eval
   args: (Tensor inference, Tensor label, Tensor seq_length, int num_chunk_types, str
