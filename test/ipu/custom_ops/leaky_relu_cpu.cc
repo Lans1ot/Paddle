@@ -16,6 +16,7 @@
 
 #define CHECK_INPUT(x)                                    \
   PADDLE_ENFORCE_EQ(x.place() == paddle::PlaceType::kCPU, \
+                    true,                                 \
                     common::errors::Fatal(#x " must be a CPU Tensor."))
 
 template <typename data_t>
