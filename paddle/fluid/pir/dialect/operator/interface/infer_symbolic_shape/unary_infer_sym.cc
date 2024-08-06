@@ -575,12 +575,38 @@ bool ChannelShuffleOpInferSymbolicShape(
 //   return true;
 // }
 
-// bool DiagOpInferSymbolicShape(pir::Operation *op,
-//                               pir::InferSymbolicShapeContext *infer_context)
-//                               {
-//   // pass
-//   return true;
-// }
+bool DiagOpInferSymbolicShape(pir::Operation *op,
+                              pir::InferSymbolicShapeContext *infer_context)
+                              {
+  auto x_dims = op->operand_source(0).shape();
+  auto offset = op->attribute<pir::Int32Attribute>("offset").data();
+
+  if (x_dims.size() <= 1) {
+    int64_t size_ = (x_dims.size() == 1UL ? x_dims[0].get_value() : 1L) + offset;
+    infer_context->SetShapeOrDataForValue(op->result(0),
+                                         symbol::TensorShapeOrDataDimExprs({size_}));
+  } else if (x_dims.size() == 2UL) {
+    int64_t size_ = 0;
+    if(offset >= 0) {
+      if (x_dims[0].get_value() > x_dims[1].get_value()) {
+        size_ = x_dims[0].get_value();
+      } else {
+        size_ = x_dims[1].get_value() - offset;
+      }
+    } else {
+      if (x_dims[0].get_value() + offset < x_dims[1].get_value()) { 
+        size_ = x_dims[0].get_value() + offset;
+      } else {
+        size_ = x_dims[1].get_value();
+      }
+    }
+    infer_context->SetShapeOrDataForValue(op->result(0),
+                                         symbol::TensorShapeOrDataDimExprs({size_}));
+  } else {
+    PADDLE_ENFORCE_EQ(true, false, common::errors::InvalidArgument("diag only support 1D/2D matrix, but input has %u dims", x_dims.size()));
+  }
+  return true;
+}
 
 bool DiagEmbedOpInferSymbolicShape(
     pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {

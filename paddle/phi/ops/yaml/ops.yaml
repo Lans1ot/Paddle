@@ -1363,6 +1363,7 @@
   kernel :
     func : diag
   backward : diag_grad
+  interfaces : paddle::dialect::InferSymbolicShapeInterface
 
 - op : diag_embed
   args : (Tensor input, int offset = 0, int dim1 = -2, int dim2 = -1)
