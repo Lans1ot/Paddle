@@ -583,22 +583,23 @@ bool DiagOpInferSymbolicShape(pir::Operation *op,
 
   if (x_dims.size() <= 1) {
     int64_t size_ =
-        (x_dims.size() == 1UL ? x_dims[0].get_value() : 1L) + offset;
+        (x_dims.size() == 1UL ? x_dims[0].dyn_cast<int64_t>() : 1L) + offset;
     infer_context->SetShapeOrDataForValue(
         op->result(0), symbol::TensorShapeOrDataDimExprs({size_, size_}));
   } else if (x_dims.size() == 2UL) {
     int64_t size_ = 0;
     if (offset >= 0) {
-      if (x_dims[0].get_value() > x_dims[1].get_value()) {
-        size_ = x_dims[0].get_value();
+      if (x_dims[0].dyn_cast<int64_t>() > x_dims[1].dyn_cast<int64_t>()) {
+        size_ = x_dims[0].dyn_cast<int64_t>();
       } else {
-        size_ = x_dims[1].get_value() - offset;
+        size_ = x_dims[1].dyn_cast<int64_t>() - offset;
       }
     } else {
-      if (x_dims[0].get_value() + offset < x_dims[1].get_value()) {
-        size_ = x_dims[0].get_value() + offset;
+      if (x_dims[0].dyn_cast<int64_t>() + offset <
+          x_dims[1].dyn_cast<int64_t>()) {
+        size_ = x_dims[0].dyn_cast<int64_t>() + offset;
       } else {
-        size_ = x_dims[1].get_value();
+        size_ = x_dims[1].dyn_cast<int64_t>();
       }
     }
     infer_context->SetShapeOrDataForValue(
@@ -786,13 +787,12 @@ bool FractionalMaxPool2DOpInferSymbolicShape(
           x_dims.size()));
 
   PADDLE_ENFORCE_EQ(
-      x_dims.size() - output_size_.size(),
+      x_dims.size() - output_size.size(),
       2U,
       common::errors::InvalidArgument(
           "The input size %d minus the output size %d should equal to 2.",
           x_dims.size(),
-          output_size_.size()));
-  return true;
+          output_size.size()));
 
   auto output_shape = std::vector<symbol::DimExpr>{
       x_dims[0].dyn_cast<int32_t>(), x_dims[1].dyn_cast<int32_t>};
