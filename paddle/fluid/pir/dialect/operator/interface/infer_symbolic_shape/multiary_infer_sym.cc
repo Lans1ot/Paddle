@@ -1172,7 +1172,9 @@ bool FakeChannelWiseDequantizeMaxAbsOpInferSymbolicShape(
 
 bool MultiDotOpInferSymbolicShape(
     pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {
-  const auto input_values = op->operands_source();
+  const symbol::TensorListShapeOrDataDimExprs &input_values =
+      infer_context->GetShapeOrDataForValue(op->operand_source(0))
+          .dyn_cast<symbol::TensorListShapeOrDataDimExprs>();
   const auto input_num = input_values.size();
   PADDLE_ENFORCE_GT(
       input_num,
@@ -1184,8 +1186,7 @@ bool MultiDotOpInferSymbolicShape(
   bool is_vector = false;
   std::vector<symbol::DimExpr> out_dim;
 
-  auto first_dim =
-      infer_context->GetShapeOrDataForValue(input_values[0]).shape();
+  auto first_dim = input_values[0].shape();
   PADDLE_ENFORCE_LT(
       first_dim.size(),
       static_cast<size_t>(3),
@@ -1200,8 +1201,7 @@ bool MultiDotOpInferSymbolicShape(
     is_vector = true;
   }
 
-  auto last_dim =
-      infer_context->GetShapeOrDataForValue(input_values[n - 1]).shape();
+  auto last_dim = input_values[n - 1].shape();
   PADDLE_ENFORCE_LT(
       last_dim.size(),
       static_cast<size_t>(3),
@@ -1244,6 +1244,8 @@ bool MultiDotOpInferSymbolicShape(
       true,
       phi::errors::InvalidArgument(
           "the input matrix does not meet the multiplication requirements."));
+
+  infer_context->AddEqualCstr(last_dim[0], width);
 
   infer_context->SetShapeOrDataForValue(
       op->result(0),
