@@ -800,9 +800,7 @@ bool FractionalMaxPool2dOpInferSymbolicShape(
       output_shape.end(), output_size.begin(), output_size.end());
 
   infer_context->SetShapeOrDataForValue(
-      op->operand(0),
-      symbol::ShapeOrDataDimExprs{
-          symbol::TensorListShapeOrDataDimExprs(output_shape)});
+      op->operand(0), symbol::ShapeOrDataDimExprs{output_shape});
   return true;
 }
 
