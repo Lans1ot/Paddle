@@ -1223,8 +1223,7 @@ bool MultiDotOpInferSymbolicShape(
   }
   auto width = first_dim.at(1);
   for (auto i = 1; i < n; ++i) {
-    auto &input_dim =
-        infer_context->GetShapeOrDataForValue(input_values[i]).shape();
+    auto &input_dim = input_values[i].shape();
     PADDLE_ENFORCE_EQ(input_dim.size() == static_cast<size_t>(2),
                       true,
                       common::errors::InvalidArgument(
