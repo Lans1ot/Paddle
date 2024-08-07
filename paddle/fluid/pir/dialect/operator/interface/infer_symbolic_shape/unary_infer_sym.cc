@@ -794,8 +794,7 @@ bool FractionalMaxPool2dOpInferSymbolicShape(
           x_dims.size(),
           output_size.size()));
 
-  auto output_shape = std::vector<symbol::DimExpr>{
-      x_dims[0].dyn_cast<int32_t>(), x_dims[1].dyn_cast<int32_t>()};
+  auto output_shape = std::vector<symbol::DimExpr>{x_dims[0], x_dims[1]};
   output_shape.insert(
       output_shape.end(), output_size.begin(), output_size.end());
 
