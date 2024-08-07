@@ -773,7 +773,7 @@ bool EigvalshOpInferSymbolicShape(
   return EighOpInferSymbolicShape(op, infer_context);
 }
 
-bool FractionalMaxPool2DOpInferSymbolicShape(
+bool FractionalMaxPool2dOpInferSymbolicShape(
     pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {
   auto x_dims =
       infer_context->GetShapeOrDataForValue(op->operand_source(0)).shape();
