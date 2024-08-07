@@ -1169,6 +1169,7 @@ bool FakeChannelWiseDequantizeMaxAbsOpInferSymbolicShape(
 
   return true;
 }
+
 bool MultiDotOpInferSymbolicShape(
     pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {
   const auto input_values = op->operands_source();
@@ -1194,7 +1195,8 @@ bool MultiDotOpInferSymbolicShape(
   // If the first tensor is 1D of size n view it as a row vector (1, n)
 
   if (first_dim.size() == 1) {
-    first_dim = std::vector<symbol::DimExpr>{1, static_cast<int>(first_dim[0])};
+    first_dim = std::vector<symbol::DimExpr>{static_cast<symbol::DimExpr>(1),
+                                             first_dim[0]};
     is_vector = true;
   }
 
@@ -1209,35 +1211,37 @@ bool MultiDotOpInferSymbolicShape(
 
   // If the last tensor is 1D of size n view it as a column vector (n, 1)
   if (last_dim.size() == 1) {
-    last_dim = std::vector<symbol::DimExpr>{static_cast<int>(last_dim[0], 1)};
+    last_dim = std::vector<symbol::DimExpr>{last_dim[0],
+                                            static_cast<symbol::DimExpr>(1)};
     out_dim = is_vector
                   ? std::vector<symbol::DimExpr>{}
                   : std::vector<symbol::DimExpr>{first_dim[0], last_dim[1]};
   } else {
-    outdim = is ? std::vector<symbol::DimExpr>{last_dim[1]}
-                : std::vector<symbol::DimExpr>{first_dim[0], last_dim[1]};
+    out_dim = is_vector
+                  ? std::vector<symbol::DimExpr>{last_dim[1]}
+                  : std::vector<symbol::DimExpr>{first_dim[0], last_dim[1]};
   }
-  const auto width = first_dim.at(1);
+  auto width = first_dim.at(1);
   for (auto i = 1; i < n; ++i) {
-    PADDLE_ENFORCE_EQ(inputs_dims[i].size(),
-                      static_cast<size_t>(2),
+    auto &input_dim =
+        infer_context->GetShapeOrDataForValue(input_values[i]).shape();
+    PADDLE_ENFORCE_EQ(input_dim.size() == static_cast<size_t>(2),
+                      true,
                       common::errors::InvalidArgument(
                           "the input tensor of multi_dot op must be 2D."));
 
-    const auto &tmp_dim =
-        infer_context->GetShapeOrDataForValue(input_values[i]).shape();
     PADDLE_ENFORCE_EQ(
-        tmp_dim[0],
-        width,
+        input_dim[0] == width,
+        true,
         common::errors::InvalidArgument(
             "the input matrix does not meet the multiplication requirements."));
-    infer_context->AddEqualCstr(tmp_dim[0], width);
-    width = tmp_dim[1];
+    infer_context->AddEqualCstr(input_dim[0], width);
+    width = input_dim[1];
   }
 
   PADDLE_ENFORCE_EQ(
-      last_dim[0],
-      width,
+      last_dim[0] == width,
+      true,
       phi::errors::InvalidArgument(
           "the input matrix does not meet the multiplication requirements."));
 
