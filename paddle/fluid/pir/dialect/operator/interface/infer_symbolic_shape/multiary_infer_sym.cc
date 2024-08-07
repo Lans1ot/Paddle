@@ -1186,6 +1186,8 @@ bool MultiDotOpInferSymbolicShape(
   bool is_vector = false;
   std::vector<symbol::DimExpr> out_dim;
 
+  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal(" we can run here"));
+
   auto first_dim = input_values[0].shape();
   PADDLE_ENFORCE_LT(
       first_dim.size(),
