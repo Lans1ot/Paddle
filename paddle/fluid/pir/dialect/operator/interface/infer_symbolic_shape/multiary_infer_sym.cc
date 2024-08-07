@@ -1186,8 +1186,6 @@ bool MultiDotOpInferSymbolicShape(
   bool is_vector = false;
   std::vector<symbol::DimExpr> out_dim;
 
-  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal(" we can run here"));
-
   auto first_dim = input_values[0].shape();
   PADDLE_ENFORCE_LT(
       first_dim.size(),
@@ -1196,6 +1194,8 @@ bool MultiDotOpInferSymbolicShape(
           "multi_dot: the first input tensor must be 1D or 2D but got[%d]!",
           static_cast<int>(first_dim.size())));
   // If the first tensor is 1D of size n view it as a row vector (1, n)
+
+  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal(" we can run here"));
 
   if (first_dim.size() == 1) {
     first_dim = std::vector<symbol::DimExpr>{static_cast<symbol::DimExpr>(1),
