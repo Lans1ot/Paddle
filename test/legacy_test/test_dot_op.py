@@ -304,7 +304,9 @@ class TestDotBF16Op(OpTest):
         if core.is_compiled_with_cuda():
             place = core.CUDAPlace(0)
             if core.is_bfloat16_supported(place):
-                self.check_output_with_place(place, atol=0.5, check_pir=True)
+                self.check_output_with_place(
+                    place, atol=0.5, check_pir=True, check_symbol_infer=True
+                )
 
     def test_check_grad_normal(self):
         if core.is_compiled_with_cuda():

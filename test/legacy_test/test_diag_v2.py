@@ -341,7 +341,9 @@ class TestDiagV2BF16OP(OpTest):
     def test_check_output(self):
         paddle.enable_static()
         place = core.CUDAPlace(0)
-        self.check_output_with_place(place, check_pir=True)
+        self.check_output_with_place(
+            place, check_pir=True, check_symbol_infer=True
+        )
 
     def test_check_grad(self):
         paddle.enable_static()
