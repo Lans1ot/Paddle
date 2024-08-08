@@ -1225,28 +1225,27 @@ bool MultiDotOpInferSymbolicShape(
   auto width = first_dim.at(1);
   for (auto i = 1; i < n; ++i) {
     auto &input_dim = input_values[i].shape();
-    PADDLE_ENFORCE_EQ(input_dim.size() == static_cast<size_t>(2),
-                      true,
+    PADDLE_ENFORCE_EQ(input_dim.size(),
+                      static_cast<size_t>(2),
                       common::errors::InvalidArgument(
                           "the input tensor of multi_dot op must be 2D."));
 
     PADDLE_ENFORCE_EQ(
-        input_dim[0] == width,
-        true,
+        input_dim[0],
+        width,
         common::errors::InvalidArgument(
             "the input matrix does not meet the multiplication requirements."));
     infer_context->AddEqualCstr(input_dim[0], width);
     width = input_dim[1];
   }
 
-  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal("5: we can run here"));
-
   PADDLE_ENFORCE_EQ(
-      last_dim[0] == width,
-      true,
+      last_dim[0],
+      width,
       phi::errors::InvalidArgument(
           "the input matrix does not meet the multiplication requirements."));
 
+  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal("5: we can run here"));
   infer_context->AddEqualCstr(last_dim[0], width);
 
   infer_context->SetShapeOrDataForValue(
