@@ -44,7 +44,7 @@ class TestMultiDotOp(OpTest):
         self.outputs = {'Out': multi_dot([self.A, self.B])}
 
     def test_check_output(self):
-        self.check_output(check_pir=True)
+        self.check_output(check_pir=True, check_symbol_infer=True)
 
     def test_check_grad(self):
         self.check_grad(['x0'], 'Out', check_pir=True)
@@ -87,7 +87,9 @@ class TestMultiDotBF16Op(OpTest):
         }
 
     def test_check_output(self):
-        self.check_output_with_place(self.place, check_pir=True)
+        self.check_output_with_place(
+            self.place, check_pir=True, check_symbol_infer=True
+        )
 
     def test_check_grad(self):
         self.check_grad_with_place(
