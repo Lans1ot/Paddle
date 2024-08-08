@@ -1209,8 +1209,6 @@ bool MultiDotOpInferSymbolicShape(
           "the last input tensor of multi_dot must be 1D or 2D but got[%d]!",
           static_cast<int>(first_dim.size())));
 
-  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal("3: we can run here"));
-
   // If the last tensor is 1D of size n view it as a column vector (n, 1)
   if (last_dim.size() == 1) {
     last_dim = std::vector<symbol::DimExpr>{last_dim[0],
@@ -1223,6 +1221,9 @@ bool MultiDotOpInferSymbolicShape(
                   ? std::vector<symbol::DimExpr>{last_dim[1]}
                   : std::vector<symbol::DimExpr>{first_dim[0], last_dim[1]};
   }
+
+  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal("4: we can run here"));
+
   auto width = first_dim.at(1);
   for (auto i = 1; i < n; ++i) {
     auto &input_dim = input_values[i].shape();
