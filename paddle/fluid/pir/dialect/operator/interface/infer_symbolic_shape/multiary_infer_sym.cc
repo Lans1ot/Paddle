@@ -1222,8 +1222,6 @@ bool MultiDotOpInferSymbolicShape(
                   : std::vector<symbol::DimExpr>{first_dim[0], last_dim[1]};
   }
 
-  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal("4: we can run here"));
-
   auto width = first_dim.at(1);
   for (auto i = 1; i < n; ++i) {
     auto &input_dim = input_values[i].shape();
@@ -1240,6 +1238,8 @@ bool MultiDotOpInferSymbolicShape(
     infer_context->AddEqualCstr(input_dim[0], width);
     width = input_dim[1];
   }
+
+  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal("5: we can run here"));
 
   PADDLE_ENFORCE_EQ(
       last_dim[0] == width,
