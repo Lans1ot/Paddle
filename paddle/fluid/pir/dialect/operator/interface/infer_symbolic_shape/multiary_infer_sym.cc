@@ -1247,9 +1247,9 @@ bool MultiDotOpInferSymbolicShape(
 
   infer_context->AddEqualCstr(last_dim[0], width);
 
-  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal("5: we can run here"));
   infer_context->SetShapeOrDataForValue(
       op->result(0),
       symbol::ShapeOrDataDimExprs{symbol::TensorShapeOrDataDimExprs(out_dim)});
+  return true;
 }
 }  // namespace paddle::dialect
