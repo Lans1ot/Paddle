@@ -1213,9 +1213,8 @@ bool MultiDotOpInferSymbolicShape(
   if (last_dim.size() == 1) {
     last_dim = std::vector<symbol::DimExpr>{last_dim[0],
                                             static_cast<symbol::DimExpr>(1)};
-    out_dim = is_vector
-                  ? std::vector<symbol::DimExpr>{}
-                  : std::vector<symbol::DimExpr>{first_dim[0], last_dim[1]};
+    out_dim = is_vector ? std::vector<symbol::DimExpr>{}
+                        : std::vector<symbol::DimExpr>{first_dim[0]};
   } else {
     out_dim = is_vector
                   ? std::vector<symbol::DimExpr>{last_dim[1]}
