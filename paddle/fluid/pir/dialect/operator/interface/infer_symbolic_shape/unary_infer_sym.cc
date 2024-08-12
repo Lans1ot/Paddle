@@ -806,6 +806,7 @@ bool FractionalMaxPool2dOpInferSymbolicShape(
           "The input size %d minus the output size %d should equal to 2.",
           x_shape.size(),
           output_size.size()));
+  PADDLE_ENFORCE_EQ(false, true, common::errors::Fatal("1: here!"));
 
   auto output_shape = std::vector<symbol::DimExpr>{x_shape[0], x_shape[1]};
   output_shape.insert(
