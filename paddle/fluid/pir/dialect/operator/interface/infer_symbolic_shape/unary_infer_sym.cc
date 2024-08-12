@@ -786,26 +786,28 @@ bool EigvalshOpInferSymbolicShape(
 
 bool FractionalMaxPool2dOpInferSymbolicShape(
     pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {
-  auto x_dims =
+  const auto x_shape =
       infer_context->GetShapeOrDataForValue(op->operand_source(0)).shape();
-  std::vector<int> output_size =
+  std::vector<int> output_size_ =
       paddle::dialect::details::GetVectorAttr<int>(op, "output_size");
+  std::vector<symbol::DimExpr> output_size;
+  for (dim : output_size_) output_size.emplace_back(dim);
   PADDLE_ENFORCE_EQ(
-      (x_dims.size() == 4 || x_dims.size() == 5),
+      (x_shape.size() == 4 || x_shape.size() == 5),
       true,
       common::errors::InvalidArgument(
           "Pooling intput should be 4-D or 5-D tensor but received %dD-Tensor",
           x_dims.size()));
 
   PADDLE_ENFORCE_EQ(
-      x_dims.size() - output_size.size(),
+      x_shape.size() - output_size.size(),
       2U,
       common::errors::InvalidArgument(
           "The input size %d minus the output size %d should equal to 2.",
-          x_dims.size(),
+          x_shape.size(),
           output_size.size()));
 
-  auto output_shape = std::vector<symbol::DimExpr>{x_dims[0], x_dims[1]};
+  auto output_shape = std::vector<symbol::DimExpr>{x_shape[0], x_shape[1]};
   output_shape.insert(
       output_shape.end(), output_size.begin(), output_size.end());
 
