@@ -788,8 +788,8 @@ bool FractionalMaxPool2dOpInferSymbolicShape(
     pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {
   auto x_dims =
       infer_context->GetShapeOrDataForValue(op->operand_source(0)).shape();
-  auto output_size =
-      infer_context->GetShapeOrDataForValue(op->operand_source(1)).shape();
+  std::vector<int> output_size =
+      paddle::dialect::details::GetVectorAttr<int>(op, "output_size");
   PADDLE_ENFORCE_EQ(
       (x_dims.size() == 4 || x_dims.size() == 5),
       true,
