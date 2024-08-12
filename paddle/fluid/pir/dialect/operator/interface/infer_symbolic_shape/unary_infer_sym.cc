@@ -581,16 +581,16 @@ bool DiagOpInferSymbolicShape(pir::Operation *op,
       infer_context->GetShapeOrDataForValue(op->operand_source(0));
   const auto x_shape = x_shape_or_data.shape();
   const int offset = op->attribute<pir::Int32Attribute>("offset").data();
-  int64_t x_dim_0, x_dim_1;
+  int64_t x_dim_0 = 1, x_dim_1;
 
-  if (x_shape.size() <= 1) {
+  if (x_shape.size() == 1) {
     if (x_shape[0].isa<int64_t>())
       x_dim_0 = x_shape[0].dyn_cast<int64_t>();
     else
       x_dim_0 = x_shape_or_data.data().value()[0];
   }
 
-  if (x_shape.size() <= 2) {
+  if (x_shape.size() == 2) {
     if (x_shape[1].isa<int64_t>())
       x_dim_1 = x_shape[1].dyn_cast<int64_t>();
     else
@@ -598,10 +598,10 @@ bool DiagOpInferSymbolicShape(pir::Operation *op,
   }
 
   if (x_shape.size() <= 1) {
-    int64_t size_ = (x_dims.size() == 1UL ? x_dim_0 : 1L) + offset;
+    int64_t size_ = (x_shape.size() == 1UL ? x_dim_0 : 1L) + offset;
     infer_context->SetShapeOrDataForValue(
         op->result(0), symbol::TensorShapeOrDataDimExprs({size_, size_}));
-  } else if (x_dims.size() == 2UL) {
+  } else if (x_shape.size() == 2UL) {
     int64_t size_ = 0;
     if (offset >= 0) {
       if (x_dim_0 > x_dim_1) {
