@@ -791,7 +791,7 @@ bool FractionalMaxPool2dOpInferSymbolicShape(
   std::vector<int> output_size_ =
       paddle::dialect::details::GetVectorAttr<int>(op, "output_size");
   std::vector<symbol::DimExpr> output_size;
-  for (dim : output_size_) output_size.emplace_back(dim);
+  for (auto dim : output_size_) output_size.emplace_back(dim);
   PADDLE_ENFORCE_EQ(
       (x_shape.size() == 4 || x_shape.size() == 5),
       true,
