@@ -797,7 +797,7 @@ bool FractionalMaxPool2dOpInferSymbolicShape(
       true,
       common::errors::InvalidArgument(
           "Pooling intput should be 4-D or 5-D tensor but received %dD-Tensor",
-          x_dims.size()));
+          x_shape.size()));
 
   PADDLE_ENFORCE_EQ(
       x_shape.size() - output_size.size(),
