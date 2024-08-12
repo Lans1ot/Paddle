@@ -587,14 +587,14 @@ bool DiagOpInferSymbolicShape(pir::Operation *op,
     if (x_shape[0].isa<int64_t>())
       x_dim_0 = x_shape[0].dyn_cast<int64_t>();
     else
-      x_dim_0 = x_shape_or_data.data().value()[0];
+      x_dim_0 = x_shape_or_data.data().value()[0].dyn_cast<int64_t>();
   }
 
   if (x_shape.size() == 2) {
     if (x_shape[1].isa<int64_t>())
       x_dim_1 = x_shape[1].dyn_cast<int64_t>();
     else
-      x_dim_1 = x_shape_or_data.data().value()[1];
+      x_dim_1 = x_shape_or_data.data().value()[1].dyn_cast<int64_t>();
   }
 
   if (x_shape.size() <= 1) {
@@ -621,7 +621,7 @@ bool DiagOpInferSymbolicShape(pir::Operation *op,
   } else {
     PADDLE_THROW(common::errors::InvalidArgument(
         "diag only support 1D/2D matrix, but input has %u dims",
-        x_dims.size()));
+        x_shape.size()));
   }
   return true;
 }
