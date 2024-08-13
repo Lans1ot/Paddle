@@ -1676,7 +1676,7 @@ bool MultiPlexOpInferSymbolicShape(
           "The index tensor must be a vector with batchSize x 1."));
 
   PADDLE_ENFORCE_GT(
-      ins_shape_or_data.shape().size(),
+      ins.size(),
       1,
       common::errors::InvalidArgument("multiplex operator should have more "
                                       "than one candidate input tensors."));
