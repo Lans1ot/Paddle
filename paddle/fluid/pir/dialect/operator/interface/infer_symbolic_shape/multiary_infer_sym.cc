@@ -1651,7 +1651,7 @@ bool Where_OpInferSymbolicShape(pir::Operation *op,
   return WhereOpInferSymbolicShape(op, infer_context);
 }
 
-bool MultiPlexOpInferSymbolicShape(
+bool MultiplexOpInferSymbolicShape(
     pir::Operation *op, pir::InferSymbolicShapeContext *infer_context) {
   const auto &ins = infer_context->GetShapeOrDataForValue(op->operand_source(0))
                         .dyn_cast<symbol::TensorListShapeOrDataDimExprs>();
