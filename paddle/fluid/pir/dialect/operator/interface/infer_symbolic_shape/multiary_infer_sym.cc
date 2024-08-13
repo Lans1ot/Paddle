@@ -1698,7 +1698,7 @@ bool MultiPlexOpInferSymbolicShape(
                           "All the candidate tensors must have the same dim."));
 
     for (size_t j = 0; j < in_shape.size(); ++j)
-      infer_context->AddEqualCstr(in_shape[j], ins[i][j]);
+      infer_context->AddEqualCstr(in_shape[j], ins[i].shape()[j]);
   }
 
   if (in_shape[0].isa<int64_t>() &&
